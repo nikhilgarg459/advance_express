@@ -6,6 +6,9 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var nconf = require('nconf');
 
+var winston = require('winston');
+
+
 var index = require('./routes/index');
 var users = require('./routes/users');
 
@@ -29,8 +32,16 @@ nconf.file("config.json");
 nconf.defaults({
   "http":{
     "port": 3000
+  },
+  "logger":{
+    "fileLevel": "error"
   }
 });
+
+winston.add(winston.transports.File, {"filename": "error.log", "level": nconf.get("logger:fileLevel")});
+// winston.error("Something went wrong");
+winston.info("Initialized nconf");
+winston.info("http config info: ",nconf.get("http"));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
