@@ -4,11 +4,33 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var nconf = require('nconf');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
+
+// nconf.overrides({
+//   "http":{
+//     "port": 9000
+//   }
+// });
+
+nconf.argv({
+  'p':{
+    'alias': 'http:port',
+    'describe': 'the port to listen on'
+  }
+});
+
+nconf.file("config.json");
+
+nconf.defaults({
+  "http":{
+    "port": 3000
+  }
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
